@@ -1,0 +1,41 @@
+
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_INA219.h>
+
+Adafruit_INA219 ina219;
+U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0);
+
+int Vvalue = 0;
+float volt = 0;
+
+void setup(void) {
+  ina219.begin();
+  u8g2.begin();
+}
+
+void loop(void) {
+  float current_mA = 0;
+float volt = 0;
+  u8g2.clearBuffer();          // clear the internal menory
+  u8g2.setFont(u8g2_font_helvB12_tr);  // choose a suitable font
+  
+ current_mA = ina219.getCurrent_mA();
+  
+ Vvalue = analogRead (0);
+ volt = Vvalue* (10.0 / 1023.0);
+
+u8g2.setCursor (0, 14);
+u8g2.print("V = ");
+ u8g2.print(volt);
+ u8g2.print(" V");
+// u8g2.sendBuffer();
+ u8g2.setCursor (0, 32); 
+ u8g2.print("I = ");
+  u8g2.print(current_mA);
+  u8g2.print(" mA");
+  u8g2.sendBuffer();          
+  delay(200);
+}
